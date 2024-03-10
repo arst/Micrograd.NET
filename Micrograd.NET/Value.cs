@@ -12,7 +12,7 @@ namespace Micrograd.NET
 
             Prev = children ?? Array.Empty<Value>();
             Operation = op;
-            Backward = () => { };
+            BackwardProp = () => { };
         }
 
         public string Operation { get; }
@@ -21,7 +21,7 @@ namespace Micrograd.NET
 
         public double Data { get; }
 
-        public Action Backward { get; set; }
+        public Action BackwardProp { get; set; }
 
         public Value[] Prev { get; }
 
@@ -87,7 +87,7 @@ namespace Micrograd.NET
         {
             var result = new Value(Math.Pow(Data, power), new[] { this }, $"**{power}");
 
-            result.Backward = () => { Grad += power * Math.Pow(Data, power - 1) * result.Grad; };
+            result.BackwardProp = () => { Grad += power * Math.Pow(Data, power - 1) * result.Grad; };
 
             return result;
         }
@@ -96,12 +96,12 @@ namespace Micrograd.NET
         {
             var result = new Value(Data < 0 ? 0 : Data, new[] { this }, "ReLU");
 
-            result.Backward = () => { Grad = (result.Data > 0 ? 1 : 0) * result.Grad; };
+            result.BackwardProp = () => { Grad = (result.Data > 0 ? 1 : 0) * result.Grad; };
 
             return result;
         }
 
-        public void Backprop()
+        public void Backward()
         {
             var topologicalSorting = new List<Value>();
             var visited = new HashSet<Value>();
@@ -109,7 +109,7 @@ namespace Micrograd.NET
             Grad = 1;
             topologicalSorting.Reverse();
 
-            foreach (var node in topologicalSorting) node.Backward();
+            foreach (var node in topologicalSorting) node.BackwardProp();
 
             void TopologicalSort(Value node)
             {
@@ -192,7 +192,7 @@ namespace Micrograd.NET
         {
             var result = new Value(a.Data * b.Data, new[] { a, b }, "*");
 
-            result.Backward = () =>
+            result.BackwardProp = () =>
             {
                 a.Grad += b.Data * result.Grad;
                 b.Grad += a.Data * result.Grad;
@@ -204,7 +204,7 @@ namespace Micrograd.NET
         private static Value OpAddition(Value a, Value b)
         {
             var result = new Value(a.Data + b.Data, new[] { a, b }, "+");
-            result.Backward = () =>
+            result.BackwardProp = () =>
             {
                 a.Grad += result.Grad;
                 b.Grad += result.Grad;
