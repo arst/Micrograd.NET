@@ -14,6 +14,6 @@ var f = e.Pow(2);
 var g = f / 2.0;
 g += 10.0 / f;
 Console.WriteLine($"{g.Data}"); // Expected to print: 24.7041
-g.Backprop();
+g.Backward();
 Console.WriteLine($"{a.Grad}"); // Expected to print: 138.8338
 Console.WriteLine($"{b.Grad}"); // Expected to print: 645.5773

@@ -21,7 +21,7 @@ namespace Micrograd.NET
 
         public double Data { get; }
 
-        public Action BackwardProp { get; set; }
+        private Action BackwardProp { get; set; }
 
         public Value[] Prev { get; }
 
