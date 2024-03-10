@@ -22,3 +22,10 @@ g.Backprop();
 Console.WriteLine($"{a.Grad}"); // Expected to print: 138.8338
 Console.WriteLine($"{b.Grad}"); // Expected to print: 645.5773
 ```
+
+## Tracing / visualization
+You need to install the `GraphViz` package to visualize the computation graph. You can download it from [here](https://graphviz.gitlab.io/_pages/Download/Download_windows.html).
+
+```csharp
+GraphTracer.RenderGraphToImage(g, "graph.png");
+```
