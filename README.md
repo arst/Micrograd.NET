@@ -27,5 +27,11 @@ Console.WriteLine($"{b.Grad}"); // Expected to print: 645.5773
 You need to install the `GraphViz` package to visualize the computation graph. You can download it from [here](https://graphviz.gitlab.io/_pages/Download/Download_windows.html).
 
 ```csharp
-GraphTracer.RenderGraphToImage(g, "graph.png");
+var n = new Neuron(2);
+var x = new Value[]{ new Value(1.0), new Value(-2.0) };
+var y = n.Call(x);
+y.Backward();
+await GraphTracer.RenderGraphToImage(y, "neuron.png");
 ```
+
+![2d neuron](neuron.png)
