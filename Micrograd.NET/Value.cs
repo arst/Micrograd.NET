@@ -174,7 +174,7 @@ namespace Micrograd.NET
         public static Value operator /(double b, Value a)
         {
             var val = new Value(b);
-            return a * val.Pow(-1);
+            return val * a.Pow(-1);
         }
 
         public static Value operator /(int b, Value a)
