@@ -87,7 +87,7 @@ namespace Micrograd.NET
         {
             var result = new Value(Math.Pow(Data, power), new[] { this }, $"**{power}");
 
-            result.Backward = () => { Grad = power * Math.Pow(Data, power - 1) * result.Grad; };
+            result.Backward = () => { Grad += power * Math.Pow(Data, power - 1) * result.Grad; };
 
             return result;
         }
@@ -194,8 +194,8 @@ namespace Micrograd.NET
 
             result.Backward = () =>
             {
-                a.Grad = b.Data * result.Grad;
-                b.Grad = a.Data * result.Grad;
+                a.Grad += b.Data * result.Grad;
+                b.Grad += a.Data * result.Grad;
             };
 
             return result;
