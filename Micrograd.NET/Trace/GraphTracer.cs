@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using DotNetGraph.Attributes;
 using DotNetGraph.Compilation;
@@ -103,8 +105,27 @@ namespace Micrograd.NET.Trace
 
         private static void ExecuteCommand(string command)
         {
-            // Execute a shell command
-            Process.Start("cmd.exe", $"/c {command}");
+            // Determine the shell based on the current OS
+            string shell;
+            string shellArgs;
+    
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                shell = "cmd.exe";
+                shellArgs = $"/c {command}";
+            }
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || 
+                     RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+            {
+                shell = "/bin/bash";
+                shellArgs = $"-c \"{command}\"";
+            }
+            else
+            {
+                throw new PlatformNotSupportedException("Unsupported operating system.");
+            }
+            
+            Process.Start(shell, shellArgs);
         }
     }
 }
