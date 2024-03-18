@@ -19,7 +19,7 @@ namespace Micrograd.NET
 
         public double Grad { get; set; }
 
-        public double Data { get; }
+        public double Data { get; set; }
 
         private Action BackwardProp { get; set; }
 
